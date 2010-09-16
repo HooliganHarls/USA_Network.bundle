@@ -42,39 +42,40 @@ def MainMenu():
     pageUrl=USA_FULL_EPISODES_SHOW_LIST
     dir = MediaContainer(mediaType="video")
     content = XML.ElementFromURL(pageUrl, True)
+    Log("===========================")
     for item in content.xpath('//div[@id="find_it_branch_Full_Episodes"]//ul/li'):
       titleUrl = item.xpath("a")[0].get('href')
-      Log(titleUrl)
       page = HTTP.Request(titleUrl)
       titleUrl2=re.compile('var _rssURL = "(.+?)";').findall(page)[0].replace('%26','&')
-      Log(titleUrl2)
-      Log(re.compile('var _rssURL = "(.+?)";').findall(page))
-      Log(titleUrl2)
+
       image =""
       title = item.xpath("a")[0].text
       titleUrl2=titleUrl2 + "&networkid=103"
-      Log(titleUrl2)
-      dir.Append(Function(DirectoryItem(VideoPage, title), pageUrl = titleUrl2, dummyUrl=titleUrl))
+      if titleUrl2.count("34855") == 0: # excludes monk which is no longer full episodes
+        Log(title)
+        Log(titleUrl2)
+        dir.Append(Function(DirectoryItem(VideoPage, title), pageUrl = titleUrl2, dummyUrl=titleUrl))
+    Log("===========================")
     return dir 
 
 ####################################################################################################
 def VideoPage(sender, pageUrl, dummyUrl):
     dir = MediaContainer(title2=sender.itemTitle)
     content = XML.ElementFromURL(pageUrl).xpath("//item")
-    Log(content)
+
     for item in content:
       try:
         vidUrl = item.xpath('./media:content/media:player',namespaces= NAMESPACE)[0].get('url')
-        Log(vidUrl)
+ 
         vidUrl=vidUrl.replace("&dst=rss||","")
         vidUrl=vidUrl.replace("http://video.nbcuni.com/player/?id=",dummyUrl + "index.html?id=")
         title = item.xpath("title")[0].text
-        Log(title)
+
         #subtitle = Datetime.ParseDate(item.xpath('pubDate')[0].text).strftime('%a %b %d, %Y')
         #summary = item.xpath('description')[0].text.strip()
         #summary = summary[summary.find('>')+1:].strip()
         thumb = item.xpath('./media:content/media:thumbnail', namespaces=NAMESPACE)[0].get('url')
-        Log(thumb)
+
         dir.Append(WebVideoItem(vidUrl, title=title))
       except:
         pass
