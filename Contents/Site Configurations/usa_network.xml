@@ -5,13 +5,13 @@
 			version="1.0">
 	
 	
-	<crop x="25" y="15" width="670" height="380" />
+	<crop x="24" y="18" width="672" height="378" />
 	
 	<seekbar type="simple">
-		<start x="0" y="380" />
-		<end   x="600" y="380" />
+		<start x="112" y="410" />
+		<end   x="522" y="410" />
 		<played>
-				<color rgb="667f99" />
+				<color rgb="99ccff" />
 		</played>
 	</seekbar>
 	
@@ -22,7 +22,7 @@
 				<command name="pause" />
 			</condition>
 			<action>
-				<click x="36" y="393" />
+				<click x="62" y="415" />
 				<goto state="paused" />
 			</action>
 		</event>
@@ -45,7 +45,7 @@
 				<command name="play" />
 			</condition>
 			<action>
-				<click x="36" y="393" />
+				<click x="62" y="415" />
 				<goto state="playing" />
 			</action>
 		</event>
