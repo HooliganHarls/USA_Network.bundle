@@ -1,5 +1,5 @@
 import re, random
-from PMS import *
+
 
 
 
@@ -41,11 +41,17 @@ def Start():
 def MainMenu():
     pageUrl=USA_FULL_EPISODES_SHOW_LIST
     dir = MediaContainer(mediaType="video")
-    content = XML.ElementFromURL(pageUrl, True)
+    Log(pageUrl)
+    page=HTTP.Request(pageUrl)
+    Log(page)
+    content = HTML.ElementFromString(page)
     Log("===========================")
     for item in content.xpath('//div[@id="find_it_branch_Full_Episodes"]//ul/li'):
       titleUrl = item.xpath("a")[0].get('href')
       page = HTTP.Request(titleUrl)
+      Log(titleUrl)
+      page=str(page)
+      Log(re.compile('rssURL = \"(.+?)\";').findall(page))
       titleUrl2=re.compile('var _rssURL = "(.+?)";').findall(page)[0].replace('%26','&')
 
       image =""
